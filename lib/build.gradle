@@ -1,0 +1,23 @@
+apply plugin: 'com.android.library'
+
+android {
+    namespace 'com.lib'
+    compileSdkVersion 34
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 34
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    lintPublish project(':lint_rules')
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
