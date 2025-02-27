@@ -1,4 +1,4 @@
-package com.uniandes.myapplication.unused_error_classes
+package com.uniandes.myapplication.incorrect_dependency_injection
 
 import com.android.tools.lint.client.api.UElementHandler
 import com.android.tools.lint.detector.api.Category
@@ -8,19 +8,18 @@ import com.android.tools.lint.detector.api.Issue
 import com.android.tools.lint.detector.api.JavaContext
 import com.android.tools.lint.detector.api.Scope
 import com.android.tools.lint.detector.api.Severity
+import com.uniandes.myapplication.naming_rule.MethodNamingIssue
 import com.uniandes.myapplication.naming_rule.MethodNamingVisitor
 import org.jetbrains.uast.UClass
 import org.jetbrains.uast.UElement
-import org.jetbrains.uast.UFile
 import org.jetbrains.uast.UMethod
-import org.jetbrains.uast.USimpleNameReferenceExpression
 
-object UnusedErrorClassesIssue {
+object IncorrectDependencyInjectionIssue {
 
     /**
      * The fixed id of the issue
      */
-    private const val ID = "UnusedErrorClassIssue"
+    private const val ID = "IncorrectDependencyInjectionIssue"
 
     /**
      * The priority, a number from 1 to 10 with 10 being most important/severe
@@ -31,19 +30,20 @@ object UnusedErrorClassesIssue {
      * Description short summary (typically 5-6 words or less), typically describing
      * the problem rather than the fix (e.g. "Missing minSdkVersion")
      */
-    private const val DESCRIPTION = "Unused Error and Exception Classes"
+    private const val DESCRIPTION = "incorrect Dependency Injection inside the class."
 
     /**
      * A full explanation of the issue, with suggestions for how to fix it
      */
     private const val EXPLANATION = """
-        Function is wrongly named.
+        Injection dependencies are directly instantiated in constructor, you must use
+        dagger hilt or abstract dependency injection
     """
 
     /**
      * The associated category, if any @see [Category]
      */
-    private val CATEGORY = Category.CUSTOM_LINT_CHECKS
+    private val CATEGORY = Category.PERFORMANCE
 
     /**
      * The default severity of the issue
@@ -59,19 +59,19 @@ object UnusedErrorClassesIssue {
         PRIORITY,
         SEVERITY,
         Implementation(
-            UnusedClassErrorDetector::class.java,
+            IncorrectDependencyInjectionDetector::class.java,
             Scope.JAVA_FILE_SCOPE
         )
     )
 
-    class UnusedClassErrorDetector : Detector(), Detector.UastScanner {
+    class IncorrectDependencyInjectionDetector : Detector(), Detector.UastScanner {
         override fun getApplicableUastTypes(): List<Class<out UElement>> =
-            listOf(UClass::class.java, USimpleNameReferenceExpression::class.java, UFile::class.java)
+            listOf(UClass::class.java)
 
         override fun createUastHandler(context: JavaContext): UElementHandler =
-            UnusedErrorClassesVisitor(context)
+            IncorrectDependencyInjectionVisitor(context)
 
-        fun getApplicableIssues(): List<Issue> = listOf(ISSUE)
+        fun getApplicableIssues(): List<Issue> = listOf(IncorrectDependencyInjectionIssue.ISSUE)
 
     }
 }

@@ -5,7 +5,7 @@ import com.android.tools.lint.detector.api.JavaContext
 import com.intellij.psi.PsiClassType
 import org.jetbrains.uast.UMethod
 
-//@Suppress("UnstableApiUsage")
+
 class MethodNamingVisitor(private val context: JavaContext) : UElementHandler() {
     override fun visitMethod(node: UMethod) {
         if (node.returnClassName() == "String") {

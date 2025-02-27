@@ -2,24 +2,16 @@ package com.uniandes.myapplication.error_handler
 
 import com.android.tools.lint.client.api.UElementHandler
 import com.android.tools.lint.detector.api.JavaContext
-import com.intellij.psi.PsiClass
 import com.uniandes.myapplication.naming_rule.MethodNamingIssue
 import org.jetbrains.uast.UBlockExpression
 import org.jetbrains.uast.UCatchClause
-import org.jetbrains.uast.UClass
 import org.jetbrains.uast.UExpression
-import org.jetbrains.uast.UFile
 import org.jetbrains.uast.UMethod
-import org.jetbrains.uast.UReferenceExpression
-import org.jetbrains.uast.USimpleNameReferenceExpression
 import org.jetbrains.uast.UTryExpression
-import org.jetbrains.uast.visitor.AbstractUastVisitor
 
 class ErrorHandlerVisitor(private val context: JavaContext): UElementHandler() {
 
-
-        override fun visitTryExpression(node: UTryExpression) {
-        println("visita try")
+    override fun visitTryExpression(node: UTryExpression) {
         for(clause in node.catchClauses){
             if (containsGenericExceptionClause(clause) || isEmptyClause(clause)
                 || hasSoutStatement(clause)) reportIssue(clause)
@@ -48,25 +40,13 @@ class ErrorHandlerVisitor(private val context: JavaContext): UElementHandler() {
         }
     }
 
-
-
     private fun reportIssue(node: UCatchClause) {
         context.report(
             issue = ErrorHandlerIssue.ISSUE,
             location = context.getLocation(node),
             message = """
-                Exceptions must process the error. Only print stack trace or comments is a bad practice.
-            """
-        )
-    }
-
-    private fun reportClassIssue(node: UClass) {
-        context.report(
-            issue = ErrorHandlerIssue.ISSUE,
-            scopeClass = node,
-            location = context.getNameLocation(node),
-            message = """
-                Custom exceptions must be used
+                [String] string parameters must have a Once key at the end.
+                Example: removeAccountOnce()
             """
         )
     }
